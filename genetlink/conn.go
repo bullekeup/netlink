@@ -146,3 +146,17 @@ func (c *Conn) Execute(m Message, family uint16, flags netlink.HeaderFlags) ([]M
 
 	return msgs, nil
 }
+
+func (c *Conn) ExecuteNoSeqCheck(m Message, family uint16, flags netlink.HeaderFlags) ([]Message, error) {
+	_, err := c.Send(m, family, flags)
+	if err != nil {
+		return nil, err
+	}
+
+	msgs, _, err := c.Receive()
+	if err != nil {
+		return nil, err
+	}
+
+	return msgs, nil
+}
